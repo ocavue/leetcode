@@ -32,15 +32,38 @@
 from typing import List
 
 # @lc code=start
+
+
+def two_sum_v1(nums: List[int], target: int) -> List[int]:
+    # Time: O(n*n)
+    # Space: O(1)
+
+    for small_idx in range(0, len(nums)):
+        small_num = nums[small_idx]
+        for large_idx in range(small_idx + 1, len(nums)):
+            large_num = nums[large_idx]
+            if small_num + large_num == target:
+                return [small_idx, large_idx]
+
+
+def two_sum_v2(nums: List[int], target: int) -> List[int]:
+    # Time: O(n)
+    # Space: O(n)
+
+    map = {num: index for index, num in enumerate(nums)}
+    for index, num in enumerate(nums):
+        expected_num = target - num
+        if (expected_num) in map:
+            expected_index = map[expected_num]
+            if expected_index == index:
+                continue
+            else:
+                return [index, expected_index]
+
+
 class Solution:
     def twoSum(self, nums: List[int], target: int) -> List[int]:
-        # nums.sort()
-        for small_idx in range(0, len(nums)):
-            small_num = nums[small_idx]
-            for large_idx in range(small_idx + 1, len(nums)):
-                large_num = nums[large_idx]
-                if small_num + large_num == target:
-                    return [small_idx, large_idx]
+        return two_sum_v2(nums, target)
 
 
 # @lc code=end
