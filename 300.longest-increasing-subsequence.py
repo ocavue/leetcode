@@ -38,30 +38,37 @@
 
 from typing import List
 
-# @lc code=start
+# @lc code=
+
+
+def length_of_lis_v1(nums: List[int]) -> int:
+    # Time: O(n*n)
+    # Space: O(n)
+    length_of_lts_endswith_k_list = []
+
+    for k in range(0, len(nums)):
+        if k == 0:
+            length_of_lts_endswith_k_list.append(1)
+        else:
+            length_of_lts_endswith_k = 1
+            for i in range(0, k):
+                if nums[i] < nums[k]:
+                    length_of_lts_endswith_k = max(
+                        length_of_lts_endswith_k, length_of_lts_endswith_k_list[i] + 1,
+                    )
+            length_of_lts_endswith_k_list.append(length_of_lts_endswith_k)
+        assert len(length_of_lts_endswith_k_list) == k + 1
+
+    return max(length_of_lts_endswith_k_list) if length_of_lts_endswith_k_list else 0
+
+
+def length_of_lis_v2(nums: List[int]) -> int:
+    pass
 
 
 class Solution:
     def lengthOfLIS(self, nums: List[int]) -> int:
-        length_of_lts_endswith_k_list = []
-
-        for k in range(0, len(nums)):
-            if k == 0:
-                length_of_lts_endswith_k_list.append(1)
-            else:
-                length_of_lts_endswith_k = 1
-                for i in range(0, k):
-                    if nums[i] < nums[k]:
-                        length_of_lts_endswith_k = max(
-                            length_of_lts_endswith_k,
-                            length_of_lts_endswith_k_list[i] + 1,
-                        )
-                length_of_lts_endswith_k_list.append(length_of_lts_endswith_k)
-            assert len(length_of_lts_endswith_k_list) == k + 1
-
-        return (
-            max(length_of_lts_endswith_k_list) if length_of_lts_endswith_k_list else 0
-        )
+        return length_of_lis_v1(nums)
 
 
 # @lc code=end
