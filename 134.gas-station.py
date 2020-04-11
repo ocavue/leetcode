@@ -80,7 +80,11 @@
 from typing import List
 
 
-def main(gas: List[int], cost: List[int]) -> int:
+def main_v1(gas: List[int], cost: List[int]) -> int:
+    """
+    time: O(n*n)
+    space: O(n)
+    """
     l = len(gas)
 
     def has_route(start: int) -> bool:
@@ -107,6 +111,49 @@ def main(gas: List[int], cost: List[int]) -> int:
         if has_route(index):
             return index
     return -1
+
+
+def main_v2(gas: List[int], cost: List[int]) -> int:
+    """
+    time: O(n)
+    space: O(n)
+    """
+
+    # the start index
+    s = 0
+    tank = 0
+    # the gas left if we start at `0` and travel to `i`
+    gas_needed = 0
+
+    for i in range(0, len(gas)):
+        tank += gas[i] - cost[i]
+
+        if tank < 0:
+            # if we start at `s`, we are not able to travel to `i+1`.
+            #   |
+            #   V
+            # if we start at any index `j` where `s <= j <= i`, we are not able to travel to `i+1`.
+            #   |
+            #   V
+            # if start at any index `j` where `0 <= j <= i`, we are not able to travel to `i+1`.
+            #   |
+            #   V
+            # So the start point must be larger then `i`
+
+            # if we want to travel from `s` to `i+1`, we need at least `-tank` gas in the tank when we are at `s`.
+            # So we need `gas_needed = gas_needed + (-tank)` gas in the tank if we want to travel from 0 to `i+1`.
+            gas_needed += -tank
+
+            s = i + 1
+            tank = 0
+
+    # After the for loop above, `s` is the start index, `gas_needed` is the gas needed for traveling from 0 to `s`,
+    # tank is the left gas from `s` to `len(gas)`.
+
+    return s if tank >= gas_needed else -1
+
+
+main = main_v2
 
 
 class Solution:
