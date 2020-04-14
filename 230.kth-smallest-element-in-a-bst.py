@@ -1,3 +1,6 @@
+"""
+重点：BST 的前序遍历是有序的
+"""
 #
 # @lc app=leetcode id=230 lang=python3
 #
