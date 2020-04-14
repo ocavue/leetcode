@@ -1,5 +1,7 @@
 """
 重点：BST 的前序遍历是有序的
+
+这个题目的回答特别不错，推荐去看
 """
 #
 # @lc app=leetcode id=230 lang=python3
