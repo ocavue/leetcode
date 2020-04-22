@@ -47,7 +47,11 @@ from typing import List
 # @lc code=start
 
 
-def find_duplicate(nums: List[int]) -> int:
+def find_duplicate_v1(nums: List[int]) -> int:
+    """
+    Time: O(n * log(n))
+    Space: O(1)
+    """
     n = len(nums) - 1
 
     def find(x: int, y: int) -> int:
@@ -75,14 +79,52 @@ def find_duplicate(nums: List[int]) -> int:
     return find(1, n + 1)
 
 
+def find_duplicate_v2(nums: List[int]) -> int:
+    """
+    Time: O(n)
+    Space: O(1)
+
+    Use leetcode No.142
+    """
+    step_i = 0
+    step_j = 0
+    idx_i = nums[0]
+    idx_j = nums[0]
+    while True:
+        idx_i = nums[idx_i]
+        idx_j = nums[nums[idx_j]]
+        step_i += 1
+        step_j += 2
+        if idx_i == idx_j:
+            step_i = step_j
+            break
+
+    idx_y = idx_i
+    del idx_i, step_i, idx_j, step_j
+
+    idx_x = nums[0]
+
+    while True:
+        if idx_x == idx_y:
+            return idx_x
+        idx_x = nums[idx_x]
+        idx_y = nums[idx_y]
+
+
 class Solution:
     def findDuplicate(self, nums: List[int]) -> int:
-        return find_duplicate(nums)
+        return find_duplicate_v1(nums)
 
 
 # @lc code=end
 if __name__ == "__main__":
-    print(find_duplicate([1, 3, 4, 2, 2]))
-    print(find_duplicate([3, 1, 3, 4, 2]))
-    print(find_duplicate([1, 1]))
-    print(find_duplicate([1, 2, 2]))
+    s = Solution().findDuplicate
+    import unittest
+
+    test = unittest.TestCase("__init__")
+
+    for f in [find_duplicate_v1, find_duplicate_v2]:
+        test.assertEqual(f([1, 3, 4, 2, 2]), 2)
+        test.assertEqual(f([3, 1, 3, 4, 2]), 3)
+        test.assertEqual(f([1, 1]), 1)
+        test.assertEqual(f([1, 2, 2]), 2)
