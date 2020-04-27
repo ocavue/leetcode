@@ -37,11 +37,11 @@ tags: [redo, quick-sort, quick-select, heap]
 #
 #
 
-# @lc code=start
 from typing import List
-import heapq
 
-DEBUG = False
+# @lc code=start
+import heapq
+import random
 
 
 def klargest_v1(nums: List[int], k: int) -> int:
@@ -103,6 +103,9 @@ def partition(nums: List[int], lo: int, hi: int) -> int:
     return p
 
 
+random.seed(a=12345)
+
+
 def klargest_v2(nums: List[int], k: int) -> int:
     """
     use quick-select
@@ -127,6 +130,8 @@ def klargest_v2(nums: List[int], k: int) -> int:
     >>> klargest_v2([99,99,99,99,99], 1)
     99
     """
+
+    random.shuffle(nums)
 
     def quick_select_klarget(lo: int, hi: int, k: int):
         # assert 0 <= lo < hi <= len(nums)
