@@ -65,7 +65,6 @@ class RandomizedSet:
         """
         self.vals = []
         self.idxs = {}
-        self.count = 0
 
     def insert(self, val: int) -> bool:
         """
@@ -76,7 +75,6 @@ class RandomizedSet:
         else:
             self.vals.append(val)
             self.idxs[val] = len(self.vals) - 1
-            self.count += 1
             return True
 
     def remove(self, val: int) -> bool:
@@ -85,10 +83,11 @@ class RandomizedSet:
         """
         if val in self.idxs:
             idx = self.idxs[val]
+            last = len(self.vals) - 1
+            self.vals[idx] = self.vals[last]
+            self.idxs[self.vals[last]] = idx
+            self.vals.pop()
             del self.idxs[val]
-            self.vals[idx] = None
-            self.count -= 1
-            self._clean()
             return True
         else:
             return False
@@ -97,17 +96,7 @@ class RandomizedSet:
         """
         Get a random element from the set.
         """
-        while True:
-            idx = random.randint(0, len(self.vals) - 1)
-            val = self.vals[idx]
-            if val is not None:
-                return val
-
-    def _clean(self):
-        if len(self.vals) >= 4 and len(self.vals) > 2 * self.count:
-            self.vals = [i for i in self.vals if i is not None]
-            self.idxs = {val: idx for idx, val in enumerate(self.vals)}
-            self.count = len(self.vals)
+        return self.vals[random.randint(0, len(self.vals) - 1)]
 
 
 # @lc code=end
