@@ -84,7 +84,7 @@ class RandomizedSet:
         if val in self.idxs:
             idx = self.idxs[val]
             last = len(self.vals) - 1
-            self.vals[idx] = self.vals[last]
+            self.vals[idx] = self.vals[last]  # This copying last element into index of element to remove technique is genius!
             self.idxs[self.vals[last]] = idx
             self.vals.pop()
             del self.idxs[val]
