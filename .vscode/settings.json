@@ -4,5 +4,6 @@
         "--line-length",
         "140"
     ],
-    "python.formatting.provider": "black"
+    "python.formatting.provider": "black",
+    "explorer.sortOrder": "default",
 }
