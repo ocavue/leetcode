@@ -1,0 +1,12 @@
+name: CI
+
+on: push
+
+jobs:
+  Build:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: install
+        run: pip3 install pyyaml
+      - name: statistics
+        run: python3 ./statistics.py
