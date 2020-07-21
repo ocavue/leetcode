@@ -1,6 +1,6 @@
 """
 submits:
-  - time: 2020-07-21
+  - date: 2020-07-21
     cheating: true
 labels:
   - dp

@@ -1,3 +1,9 @@
+"""
+submits:
+  - date: 2020-07-07
+    cheating: false
+"""
+
 #
 # @lc app=leetcode id=416 lang=python3
 #
