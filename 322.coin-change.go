@@ -1,7 +1,8 @@
 /*
 submits:
-  - date: 2020-07-07
-    cheating: false
+ - date: 2020-07-07
+   cheating: false
+labels: [dp]
 */
 
 /*

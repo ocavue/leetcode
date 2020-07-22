@@ -31,11 +31,15 @@ def parse_header(lang: str, file_lines: str):
     header_text = "\n".join(header_lines)
     header = yaml.load(header_text, Loader=yaml.Loader)
 
-    return {
-        "submits": header.get("submits", []),
-        "labels": header.get("labels", []),
-        "comment": header.get("comment", ""),
+    parsed = {
+        "submits": header.pop("submits", []),
+        "labels": header.pop("labels", []),
+        "comment": header.pop("comment", ""),
     }
+    if header:
+        raise Exception('header has unknow fields: {}'.format(header))
+
+    return parsed
 
 
 def walk_questions():
