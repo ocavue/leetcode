@@ -4,7 +4,7 @@ submits:
     date: 2020-07-25
     minutes: 18
 comment:
-labels:
+labels: [dp]
 """
 
 #
