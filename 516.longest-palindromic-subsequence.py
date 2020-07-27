@@ -3,14 +3,14 @@ submits:
   - date: 2020-07-26
     cheating: true
     minutes: 120
-comments: |
+comment: |
   这道题重点是构造出状态转移函数。
   状态：以 dp[i][j] 表示 s[i:j+1] 可以找到的 Longest Palindromic Subsequence
   状态转移：
         如果 s[i] == s[j]，那么最长回数长度就是 2 + 子串长度
         如果 s[i] != s[j]，那么最长回数长度就是 max(dp[i][j-1] + dp[i+1][j])
   同时要注意这道题和 5.longest-palindromic-substring 是不一样的。subsequence 中的元素是可以离散的，但是 substring 中的元素是紧挨着的。
-labals: [dp]
+labels: [dp]
 
 """
 
