@@ -3,9 +3,9 @@ submits:
   - date: 2020-07-26
     cheating: false
     minutes: 19
-comments: |
+comment: |
   这道题和 516 类似
-labals: [dp]
+labels: [dp]
 """
 
 #
