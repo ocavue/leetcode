@@ -1,4 +1,11 @@
-# 12:58~14:11
+"""
+submits:
+  - date: 2020-07-27
+    cheating: false
+    minutes: 101
+labels: [dp]
+"""
+
 
 # @lc app=leetcode id=32 lang=python3
 #
@@ -33,7 +40,7 @@
 # Explanation: The longest valid parentheses substring is "()()"
 #
 #
-#
+
 
 from pprint import pprint
 
@@ -43,17 +50,54 @@ class Solution:
         if not s:
             return 0
 
+        # max_lens 是一个一维数组。max_lens[i] 表示以 s 的第 i 项开始，最长的合法子字符串的长度是多少
+        # 其中：
+        #   0 <= i < len(s)
+        max_lens = [-1] * len(s)
+
+        # 填充并返回 max_lens[i] 的结果
+        def get_max_lens(i: int) -> int:
+            if i >= len(s):
+                return 0
+
+            # assert 0 <= i < len(s)
+
+            if max_lens[i] != -1:
+                return max_lens[i]
+
+            if i == len(s) - 1:
+                max_lens[i] = 0
+            elif s[i] == ")":
+                max_lens[i] = 0
+            elif s[i] == "(":
+                if s[i + 1] == ")":
+                    max_lens[i] = 2 + get_max_lens(i + 2)
+                else:
+                    next_len = get_max_lens(i + 1)
+                    if next_len == 0:
+                        max_lens[i] = 0
+                    elif i + next_len + 1 < len(s) and s[i + next_len + 1] == ")":
+                        max_lens[i] = next_len + 2 + get_max_lens(i + next_len + 2)
+                    else:
+                        max_lens[i] = 0
+
+            # assert max_lens[i] >= 0
+            return max_lens[i]
+
+        best = 0
+        for i in range(len(s) - 1, -1, -1):
+            best = max(best, get_max_lens(i))
+        return best
+
+        ########################################################################
+
+        '''
         # dp 是一个二维数组，dp[i][j] 表示 s[i:j+1] 是否是一个合法的子字符串。这个子字符串的长度是 j - i + i
         # 其中：
         #   0 <= i <= j < len(s)
         dp = []
         for _ in range(len(s)):
             dp.append([False] * len(s))
-
-        # max_lens 是一个一维数组。max_lens[i] 表示以 s 的第 i 项开始，最长的合法子字符串的长度是多少
-        # 其中：
-        #   0 <= i < len(s)
-        max_lens = [0] * len(s)
 
         # l == j - i + 1 == 2（子字符串包含两个字符）
         for j in range(1, len(s)):
@@ -101,8 +145,10 @@ class Solution:
                         dp[i][j] = True
                         max_lens[i] = max(max_lens[i], j - i + 1)
 
+
         # pprint(dp)
         return max(max_lens)
+        '''
 
 
 # @lc code=end
