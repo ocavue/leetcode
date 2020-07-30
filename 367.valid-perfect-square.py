@@ -1,3 +1,14 @@
+"""
+submits:
+  - date: 2020-07-30
+    cheating: false
+comment: |
+  这道题有其他几种有趣的解法：
+  1. 牛顿迭代法
+  2. Square number = 1 + 3 + 5 + 7 + 9 ....
+"""
+
+
 #
 # @lc app=leetcode id=367 lang=python3
 #
