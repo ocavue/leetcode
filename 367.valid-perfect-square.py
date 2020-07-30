@@ -2,6 +2,7 @@
 submits:
   - date: 2020-07-30
     cheating: false
+    minutes: 10
 comment: |
   这道题有其他几种有趣的解法：
   1. 牛顿迭代法
