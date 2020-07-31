@@ -3,7 +3,7 @@ submits:
   - date: 2020-07-31
     cheating: false
     minutes: 26
-labels: [bfs]
+labels: [bfs, dfs]
 comment: 这道题除了 bfs 外，也可以使用 dfs
 """
 
@@ -89,6 +89,15 @@ def bfs(grid: List[List[Union[str, int]]], start_i: int, start_j: int, island_co
                 queue_j.put(y)
 
 
+def dfs(grid: List[List[Union[str, int]]], i: int, j: int, island_code: int):
+    if 0 <= i < len(grid) and 0 <= j < len(grid[0]) and grid[i][j] == NEW_LAND:
+        grid[i][j] = island_code
+        dfs(grid, i - 1, j, island_code)
+        dfs(grid, i + 1, j, island_code)
+        dfs(grid, i, j - 1, island_code)
+        dfs(grid, i, j + 1, island_code)
+
+
 class Solution:
     def numIslands(self, grid: List[List[Union[str, int]]]) -> int:
         if not grid:
@@ -99,7 +108,7 @@ class Solution:
         for i in range(len(grid)):
             for j in range(len(grid[0])):
                 if grid[i][j] == NEW_LAND:
-                    bfs(grid, i, j, island_code)
+                    dfs(grid, i, j, island_code)
                     island_code += 1
 
         return island_code
