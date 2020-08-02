@@ -4,7 +4,7 @@ submits:
     minutes: 36
     cheating: false
 labels: []
-commnet: ""
+comment: ""
 """
 
 #
