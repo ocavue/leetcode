@@ -2,9 +2,8 @@
 submits:
   - date: 2020-08-03
     cheating: false
-    minutes: 15x
+    minutes: 15
 """
-# 12:13 12:28
 #
 # @lc app=leetcode id=129 lang=python3
 #
