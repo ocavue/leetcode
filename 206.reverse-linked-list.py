@@ -2,6 +2,15 @@
 submits:
   - date: 2020-04-30
     cheating: false
+  - date: 2020-08-08
+    cheating: false
+    minutes: 19
+labels:
+  - reverse-linked-list
+comment: |
+  遇到这类「反转链表」的题目，性能最好的办法就是使用三个指针，分别指向相邻的前中后
+  三个节点，从而保证在切断连接的过程中可以知道不失去接下来的节点。这样在整个迭代
+  过程中只需要常数级别的内存
 """
 
 #
@@ -44,29 +53,53 @@ class ListNode:
 
 # @lc code=start
 
-
+# recursively
 def reverse_list(head: ListNode) -> ListNode:
-    def reverse(prev: ListNode, node: ListNode):
-        origin_next = node.next
-        node.next = prev
-        if origin_next:
-            return reverse(node, origin_next)
+    def reverse(head: ListNode):
+        assert head
+        if head.next is None:
+            return head, head
         else:
-            return node
+            new_head, prev_tail = reverse(head.next)
+            prev_tail.next = head
+            head.next = None
+            return new_head, head
 
+    if not head:
+        return head
+    else:
+        new_head, _ = reverse(head)
+        return new_head
+
+
+# iteratively
+def reverse_list_v2(head: ListNode) -> ListNode:
     if not head:
         return head
     if not head.next:
         return head
+    if not head.next.next:
+        tail = head.next
+        head.next = None
+        tail.next = head
+        return tail
 
-    head_next = head.next
-    head.next = None
-    return reverse(head, head_next)
+    a = head
+    b = head.next
+    a.next = None
+    while True:
+        c = b.next
+        b.next = a
+
+        if not c:
+            return b
+
+        a, b = b, c
 
 
 class Solution:
     def reverseList(self, head: ListNode) -> ListNode:
-        return reverse_list(head)
+        return reverse_list_v2(head)
 
 
 # @lc code=end
