@@ -13,6 +13,9 @@ comment: |
   1. 如何做到一个字母在一个单词中只用到一次。这一点实际上需要用到 backtracking 算法。
      简单来说 backtracking 就是使用 dfs 穷举所有可能，并尽快剪枝。
   2. 如果 words 中所有单词的前半部分都相同，那么这部分计算是可以以某种方式缓存下来的。所以要使用 Trie 的数据结构
+  看别人的答案学到了一些性能优化技巧：
+  1. 将 result 列表作为参数传到 dfs 里，这样不需要每次递归都重新构造新的列表
+  2. trie node 作为答案被获取到了之后，可以把它的 is_word 设置为 false，这样就不会重复地将它添加到 result 中了
 """
 # 00:50
 # @lc app=leetcode id=212 lang=python3
@@ -193,20 +196,18 @@ def find_words_v2(board: List[List[str]], words: List[str]) -> List[str]:
         for j in range(max_j):
             char_map[board[i][j]].append((i, j))
 
-    def dfs(i: int, j: int, node: TrieNode, prefix: str, used: List[List[bool]]) -> List[str]:  # Generator[str, None, None]:
-        assert used[i][j] is False
+    def dfs(i: int, j: int, node: TrieNode, prefix: str, used: List[List[bool]], result: List[str]) -> None:
+        # assert used[i][j] is False
         used[i][j] = True
 
-        assert prefix
-        assert prefix[-1] == board[i][j]
-
-        result: List[str] = []
+        # assert prefix
+        # assert prefix[-1] == board[i][j]
 
         if node.is_word:
             result.append(prefix)
+            node.is_word = False  # 注意这里，这样可以减少重复的比较
 
         for char in node.get_chars():
-            sub_prefix = prefix + char
             for x, y in [
                 [i - 1, j],
                 [i + 1, j],
@@ -214,10 +215,9 @@ def find_words_v2(board: List[List[str]], words: List[str]) -> List[str]:
                 [i, j + 1],
             ]:
                 if 0 <= x < max_i and 0 <= y < max_j and board[x][y] == char and used[x][y] is False:
-                    result += dfs(x, y, node.get_child_node(char), sub_prefix, used)
+                    dfs(x, y, node.get_child_node(char), prefix + char, used, result)
 
         used[i][j] = False
-        return result
 
     root = build_trie_root(words)
     # print("root:\n", root)
@@ -226,18 +226,13 @@ def find_words_v2(board: List[List[str]], words: List[str]) -> List[str]:
     for i in range(max_i):
         used.append([False] * max_j)
 
-    words_set = set(words)
-    found_words = []
+    # words_set = set(words)
+    result: List[str] = []
     for first_char in root.get_chars():
         # print("first_char:", first_char)
         for (i, j) in char_map[first_char]:
-            for word_candidate in dfs(i, j, root.get_child_node(first_char), first_char, used):
-                # print("word_candidate:", word_candidate)
-                if word_candidate in words_set:
-                    found_words.append(word_candidate)
-                    words_set.remove(word_candidate)
-
-    return found_words
+            dfs(i, j, root.get_child_node(first_char), first_char, used, result)
+    return result
 
 
 class Solution:
@@ -250,12 +245,24 @@ class Solution:
 if __name__ == "__main__":
     f = Solution().findWords
     for board, words, expected in [
-        # [
-        #     [["o", "a", "a", "n"], ["e", "t", "a", "e"], ["i", "h", "k", "r"], ["i", "f", "l", "v"]],
-        #     ["oath", "pea", "eat", "rain"],
-        #     set(["oath", "eat"]),
-        # ],
-        # [[["a"]], ["aaa"], set()],
+        [
+            [["o", "a", "a", "n"], ["e", "t", "a", "e"], ["i", "h", "k", "r"], ["i", "f", "l", "v"]],
+            ["oath", "pea", "eat", "rain"],
+            set(["oath", "eat"]),
+        ],
+        [[["a"]], ["aaa"], set()],
+        [
+            [
+                # fmt:off
+                ["o", "a", "a", "n"],
+                ["e", "t", "a", "e"],
+                ["i", "h", "k", "r"],
+                ["i", "f", "l", "v"],
+                # fmt:on
+            ],
+            ["oath", "pea", "eat", "rain"],
+            set(["eat", "oath"]),
+        ],
         [
             [
                 ["a", "a", "a", "a"],
