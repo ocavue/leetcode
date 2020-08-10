@@ -3,6 +3,10 @@ submits:
   - date: 2020-08-10
     minutes: 55
     cheating: false
+  - date: 2020-09-10
+    minutes: 75
+    cheating: false
+
 labels: [Trie, backtracking]
 comment: |
   这道题有两个难点：
@@ -60,13 +64,13 @@ comment: |
 #
 #
 
-from typing import List
-from collections import defaultdict
-
 # @lc code=start
 
+from typing import List, Optional, Dict
+from collections import defaultdict
 
-def find_words(board: List[List[str]], words: List[str]) -> List[str]:
+
+def find_words_v1(board: List[List[str]], words: List[str]) -> List[str]:
     if not board:
         return []
     if not board[0]:
@@ -127,9 +131,118 @@ def find_words(board: List[List[str]], words: List[str]) -> List[str]:
     return found_words
 
 
+class TrieNode:
+    def __init__(self):
+        self.children: Dict[str, TrieNode] = defaultdict(TrieNode)
+        # for i in range(26):
+        #     self.children.append(None)
+        self.is_word = False
+
+    def add_char(self, child_char: str):
+        return self.children[child_char]
+
+        # child_index = ord(child_char) - ord("a")
+        # assert 0 <= child_index < 26
+
+        # if not self.children[child_index]:
+        #     self.children[child_index] = TrieNode()
+        # return self.children[child_index]
+
+    def get_child_node(self, child_char: str) -> "TrieNode":
+        result = self.children.get(child_char)
+        assert result
+        return result
+
+    def get_chars(self) -> List[str]:
+        # return [chr(index + ord("a")) for (index, child) in enumerate(self.children) if child]
+        return self.children.keys()
+
+    def __repr__(self):
+        import json
+
+        map = {
+            "is_word": self.is_word,
+            "children": {},
+        }
+        for char in self.get_chars():
+            map["children"][char] = json.loads(repr(self.get_child_node(char)))
+
+        return json.dumps(map, indent=4)
+
+
+def build_trie_root(words: List[str]) -> TrieNode:
+    root = TrieNode()
+    for word in words:
+        node = root
+        for char in word:
+            node = node.add_char(char)
+        node.is_word = True
+    return root
+
+
+def find_words_v2(board: List[List[str]], words: List[str]) -> List[str]:
+    if not board:
+        return []
+    if not board[0]:
+        return []
+
+    max_i = len(board)
+    max_j = len(board[0])
+    char_map = defaultdict(list)
+    for i in range(max_i):
+        for j in range(max_j):
+            char_map[board[i][j]].append((i, j))
+
+    def dfs(i: int, j: int, node: TrieNode, prefix: str, used: List[List[bool]]) -> List[str]:  # Generator[str, None, None]:
+        assert used[i][j] is False
+        used[i][j] = True
+
+        assert prefix
+        assert prefix[-1] == board[i][j]
+
+        result: List[str] = []
+
+        if node.is_word:
+            result.append(prefix)
+
+        for char in node.get_chars():
+            sub_prefix = prefix + char
+            for x, y in [
+                [i - 1, j],
+                [i + 1, j],
+                [i, j - 1],
+                [i, j + 1],
+            ]:
+                if 0 <= x < max_i and 0 <= y < max_j and board[x][y] == char and used[x][y] is False:
+                    result += dfs(x, y, node.get_child_node(char), sub_prefix, used)
+
+        used[i][j] = False
+        return result
+
+    root = build_trie_root(words)
+    # print("root:\n", root)
+
+    used: List[List[bool]] = []
+    for i in range(max_i):
+        used.append([False] * max_j)
+
+    words_set = set(words)
+    found_words = []
+    for first_char in root.get_chars():
+        # print("first_char:", first_char)
+        for (i, j) in char_map[first_char]:
+            for word_candidate in dfs(i, j, root.get_child_node(first_char), first_char, used):
+                # print("word_candidate:", word_candidate)
+                if word_candidate in words_set:
+                    found_words.append(word_candidate)
+                    words_set.remove(word_candidate)
+
+    return found_words
+
+
 class Solution:
     def findWords(self, board: List[List[str]], words: List[str]) -> List[str]:
-        return find_words(board, words)
+        return find_words_v2(board, words)
 
 
 # @lc code=end
@@ -137,12 +250,12 @@ class Solution:
 if __name__ == "__main__":
     f = Solution().findWords
     for board, words, expected in [
-        [
-            [["o", "a", "a", "n"], ["e", "t", "a", "e"], ["i", "h", "k", "r"], ["i", "f", "l", "v"]],
-            ["oath", "pea", "eat", "rain"],
-            set(["oath", "eat"]),
-        ],
-        [[["a"]], ["aaa"], set()],
+        # [
+        #     [["o", "a", "a", "n"], ["e", "t", "a", "e"], ["i", "h", "k", "r"], ["i", "f", "l", "v"]],
+        #     ["oath", "pea", "eat", "rain"],
+        #     set(["oath", "eat"]),
+        # ],
+        # [[["a"]], ["aaa"], set()],
         [
             [
                 ["a", "a", "a", "a"],
