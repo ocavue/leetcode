@@ -66,10 +66,13 @@ def binary_search(lo: int, hi: int, target: int, get_item):
 
         while lo < hi - 1:
             mi = (hi + lo) // 2
-            if get_item(mi) <= target:
-                lo = mi
+            val = get_item(mi)
+            if val < target:
+                lo = mi + 1
+            elif val == target:
+                return mi
             else:
-                hi = mi
+                hi = mi - 1
 
         for i in [lo, hi]:
             if get_item(i) == target:
