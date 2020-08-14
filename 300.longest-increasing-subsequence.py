@@ -4,6 +4,7 @@ submits:
     cheating: false
   - date: 2020-08-14
     cheating: true
+    minutes: 70
 """
 
 #
