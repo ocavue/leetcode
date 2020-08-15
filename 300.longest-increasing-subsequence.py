@@ -84,7 +84,7 @@ def length_of_lis_v2(nums: List[int]) -> int:
         else:
             if n > dp[-1]:
                 dp.append(n)
-            if n == dp[-1]:
+            elif n == dp[-1]:
                 pass
             else:
                 pos = bisect.bisect_left(dp, n)
