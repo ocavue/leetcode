@@ -3,7 +3,7 @@ submits:
 - date: 2020-08-15
   minutes: 120
   cheating: false
-label:
+labels:
 - longest-increasing-subsequence
 comment: |
   这道题非常巧妙，要使用 Leetcode 300.longest-increasing-subsequence 的做法。
