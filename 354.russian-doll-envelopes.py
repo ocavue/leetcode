@@ -1,3 +1,17 @@
+"""
+submits:
+- date: 2020-08-15
+  minutes: 120
+  cheating: false
+label:
+- longest-increasing-subsequence
+comment: |
+  这道题非常巧妙，要使用 Leetcode 300.longest-increasing-subsequence 的做法。
+  主要有这么几步：
+  1. 将 Envelopes 按照 (width, -heigth) 的顺序进行排列，我们因此可以保证相同宽度的元素的 高度 一定是降序，而宽度本身是升序的。
+  2. 取排列后的信封的 height 部分组成一个新的数组 lis。这样这个数组中 lis[i] < lis[j] 就表示 Envelopes[i] 一定能放入 Envelopes[j] 中
+  3. 使用 longest-increasing-subsequence 去取 lis 的结果
+"""
 # 12:13
 # @lc app=leetcode id=354 lang=python3
 #
@@ -40,39 +54,44 @@
 # @lc code=start
 
 from typing import List, Tuple
+import bisect
 
 Envelope = Tuple[int, int]
 
 
-def is_fit(inside_envelope: Envelope, outside_envelope: Envelope):
-    return inside_envelope[0] < outside_envelope[0] and inside_envelope[1] < outside_envelope[1]
+# COPY FROM 300.longest-increasing-subsequence.py
+def length_of_lis_v2(nums: List[int]) -> int:
+    # Time: O( log(n) )
+    # Space: O(n)
 
+    # lis[i] 表示长度为 i+1 的 Increasing Subsequence 中，末尾的数字最小是多少
+    lis: List[int] = []
+    for n in nums:
+        # assert sorted(lis) == lis
 
-def get_max_envelopes(envelopes: List[Envelope], i: int, cache: list) -> int:
-    if cache[i]:
-        return cache[i]
+        if len(lis) == 0:
+            lis.append(n)
+        else:
+            if n > lis[-1]:
+                lis.append(n)
+            elif n == lis[-1]:
+                pass
+            else:
+                pos = bisect.bisect_left(lis, n)
+                assert lis[pos] >= n
+                lis[pos] = n
+        # assert sorted(lis) == lis
 
-    # 以 envelopes[i] 为核心的俄罗斯套娃中，最多能有多少个 envelopes
-    best = 1
-    I = envelopes[i]
-    for j in range(i + 1, len(envelopes)):
-        J = envelopes[j]
-        if is_fit(I, J):
-            best = max(best, 1 + get_max_envelopes(envelopes, j, cache))
+    # assert sorted(lis) == lis
+    return len(lis)
 
-    cache[i] = best
-    return best
 
 
 class Solution:
     def maxEnvelopes(self, envelopes: List[Envelope]) -> int:
-        envelopes.sort()
-
-        cache = [0] * len(envelopes)
-        best = 0
-        for i in range(len(envelopes) - 1, -1, -1):
-            best = max(best, get_max_envelopes(envelopes, i, cache))
-        return best
+        envelopes.sort(key=lambda envelope: (envelope[0], -envelope[1]))
+        heights = [envelope[1] for envelope in envelopes]
+        return length_of_lis_v2(heights)
 
 
 # @lc code=end
