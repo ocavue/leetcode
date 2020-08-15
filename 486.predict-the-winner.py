@@ -1,9 +1,9 @@
 """
-submits: 
+submits:
   - date: 2020-08-11
     minutes: 65
     cheating: false
-lables: [dp]
+labels: [dp]
 comment: 这道题一开始没有想到用 dp 去做，后来看了题目中的 tags 之后知道可以用 dp 做，之后就很简单了
 """
 
