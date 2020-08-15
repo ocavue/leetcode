@@ -74,6 +74,9 @@ def length_of_lis_v1(nums: List[int]) -> int:
 
 
 def length_of_lis_v2(nums: List[int]) -> int:
+    # Time: O( log(n) )
+    # Space: O(n)
+
     # dp[i] 表示长度为 i+1 的 Increasing Subsequence 中，末尾的数字最小是多少
     dp: List[int] = []
     for n in nums:
