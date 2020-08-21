@@ -4,7 +4,8 @@ submits:
   minutes: 10
   cheating: false
 labels:
-- "A[z] = min(A[x:y]) + c"
+- max/min elements in sliding window
+
 """
 #
 # @lc app=leetcode id=901 lang=python3

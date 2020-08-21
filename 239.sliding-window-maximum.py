@@ -2,6 +2,10 @@
 submits:
   - date: 2020-04-16
     cheating: false
+
+labels:
+  - max/min elements in sliding window
+
 """
 
 #

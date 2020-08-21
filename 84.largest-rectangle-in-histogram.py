@@ -4,7 +4,8 @@ submits:
     minutes: 180
     cheating: false
 comment: '这道题的边界条件处理太麻烦了'
-labels: []
+labels:
+  - max/min elements in sliding window
 """
 #
 # @lc app=leetcode id=84 lang=python3

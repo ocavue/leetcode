@@ -5,7 +5,7 @@ submits:
   cheating: false
 
 labels:
-- depue
+- max/min elements in sliding window
 
 comment: |
   这篇答案讲的比较详细：

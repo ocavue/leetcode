@@ -3,6 +3,10 @@ submits:
 - minutes: 20
   cheating: false
   date: 2020-08-19
+
+labels:
+- max/min elements in sliding window
+
 """
 #
 # @lc app=leetcode id=739 lang=python3
