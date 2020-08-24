@@ -3,9 +3,10 @@ submits:
 - date: 2020-08-24
   minutes: 120
   cheating: false
-labels: [dp]
+labels: [dp, bisect]
 comment: |
   这道题我的思路是对的，不过一开始还不足够清晰，重写了一遍才达到能够接受的程度。
+  另外一点就是我发现我其实根本不能一次写对二分法，所以还需要以后多加练习。
 """
 # 13:15 14:00
 # @lc app=leetcode id=1235 lang=python3
