@@ -79,9 +79,39 @@ comment: |
 # @lc code=start
 
 from collections import namedtuple
-from typing import List, Dict
+from typing import List, Dict, Tuple
 
 Job = namedtuple("Job", ["start_time", "end_time", "profit"])
+
+
+def reverse_bisect_left(reversed: List[int], target: int) -> Tuple[bool, int]:
+    if not reversed:
+        return False, 0
+    if target > reversed[0]:
+        return False, 0
+    if target < reversed[-1]:
+        return False, len(reversed)
+    if len(reversed) == 1 and reversed[0] == target:
+        return True, 0
+
+    lo, hi = 0, len(reversed) - 1
+    assert lo < hi
+    while lo < hi:
+        mi = (lo + hi) // 2
+        if reversed[mi] > target:
+            lo = mi
+        elif reversed[mi] < target:
+            hi = mi
+        else:
+            return True, mi
+
+        if hi - lo <= 1:
+            if reversed[lo] == target:
+                return True, lo
+            if reversed[hi] == target:
+                return True, hi
+            return False, hi
+    return False, lo
 
 
 class DP:
@@ -110,18 +140,26 @@ class DP:
 def find_best_profit(job: Job, dp: DP) -> int:
     # 情况一：不做这个 job
     profit1 = 0
-    # 这里可以使用二分法，毕竟 dp.start_times 是有序的。不过有点麻烦
-    for i in range(len(dp.start_times) - 1, -1, -1):
-        if dp.start_times[i] >= job.start_time:
-            profit1 = dp.map[dp.start_times[i]]
-            break
+    matched, next_index = reverse_bisect_left(dp.start_times, job.start_time)
+    if matched:
+        profit1 = dp.map[dp.start_times[next_index]]
+    else:
+        next_index = next_index - 1
+        if 0 <= next_index < len(dp.start_times):
+            profit1 = dp.map[dp.start_times[next_index]]
 
     # 情况二：做这个 job
     profit2 = job.profit
-    for i in range(len(dp.start_times) - 1, -1, -1):
-        if dp.start_times[i] >= job.end_time:
-            profit2 += dp.map[dp.start_times[i]]
-            break
+    matched, next_index = reverse_bisect_left(dp.start_times, job.end_time)
+
+    if matched:
+        profit2 += dp.map[dp.start_times[next_index]]
+    else:
+        next_index = next_index - 1
+        if 0 <= next_index < len(dp.start_times):
+            profit2 += dp.map[dp.start_times[next_index]]
+
+    # print(job, profit1, profit2, max(profit1, profit2))
 
     return max(profit1, profit2)
 
