@@ -1,3 +1,13 @@
+"""
+labels:
+- set-cover-greedy
+- greedy
+- dp
+submits:
+- date: 2020-09-01
+  cheating: false
+  minutes: 120
+"""
 
 #
 # @lc app=leetcode id=1125 lang=python3
@@ -59,7 +69,7 @@
 
 # @lc code=start
 
-from typing import List, Set, Iterable, Tuple
+from typing import List, Set, Iterable, Tuple, Dict
 
 
 def is_sufficient(
@@ -125,7 +135,7 @@ class Solution:
     def smallestSufficientTeam(self, req_skills: List[str], people: List[List[str]]) -> List[int]:
         max_bit = 2 ** len(req_skills) - 1
 
-        # 初始化
+        # 初始化 bitmaps
         skill_bitmaps: List[int] = []
         for person in people:
             bitmap = 0
@@ -135,27 +145,19 @@ class Solution:
             skill_bitmaps.append(bitmap)
             assert 0 <= bitmap <= max_bit
 
-        chosen_bitmap = 2 ** len(people) - 1
-        chosen_size = len(people)
+        # dp[skill] = people 指需要获得 skill 所需要的最少人数
+        dp: Dict[int, List[int]] = {0: []}
 
-        # 删除可以被简单替代的人
-        to_remove = []
-        for i, x in enumerate(skill_bitmaps):
-            for j in range(i + 1, len(skill_bitmaps)):
-                y = skill_bitmaps[j]
-                if x | y == y:
-                    # x 能完全被 y 替代
-                    to_remove.append(i)
-                    break
-        # assert get_ones_from_bitmap(chosen_bitmap) == chosen_size
-        for index in to_remove:
-            # assert get_ones_from_bitmap(chosen_bitmap) == chosen_size
-            chosen_bitmap -= 2 ** index
-            chosen_size -= 1
-
-        best_chose_bitmap, best_team_size = search_min_team_size(skill_bitmaps, chosen_bitmap, max_bit, 0, chosen_size)
-
-        return get_indexs_from_bitmap(best_chose_bitmap)
+        for i, my_skill in enumerate(skill_bitmaps):
+            for team_skill, team in list(dp.items()):
+                comb_skill = my_skill | team_skill
+                if comb_skill == team_skill:
+                    continue
+                if comb_skill not in dp:
+                    dp[comb_skill] = team + [i]
+                elif len(dp[comb_skill]) > len(team) + 1:
+                    dp[comb_skill] = team + [i]
+        return dp[(1 << len(req_skills)) - 1]
 
 
 # @lc code=end
@@ -200,6 +202,6 @@ if __name__ == "__main__":
                 [],
             ],
         ),
-        [1, 6, 7],
+        [1, 4, 7],
     )
 
