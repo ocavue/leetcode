@@ -8,8 +8,6 @@ lables:
 - bfs
 """
 
-# 09-03  22 ： 15 22:53
-
 # @lc app=leetcode id=827 lang=python3
 #
 # [827] Making A Large Island
