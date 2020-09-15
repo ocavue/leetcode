@@ -2,6 +2,9 @@
 submits:
   - date: 2020-07-22
     cheating: true
+  - date: 2020-09-15
+    cheating: false
+    minutes: 7
 labels:
   - dp
 comment: |
@@ -85,21 +88,17 @@ class Solution:
         False
         """
 
-        # dp 是一个 map，表示截止到 s 的某一个位置为止，是不是可以成功地使用 word_dict 组合出来
-        # dp[1] 表示 s[0:1] 能不能使用 word_dict 组合出来
-        # dp[x] 表示 s[0:x] 能不能使用 word_dict 组合出来
-        # dp[len(s)] 表示 s[0:len(s)] 能不能使用 word_dict 组合出来。这也就是我们要最终返回的结果
-        # dp[0] 没有含义，这里为了方便计算设置为 0
-        dp = [False] * (len(s) + 1)
-        dp[0] = True
+        # dp[i] 表示 s[i:] 能否使用 dict 拼出
+        dp = [False] * len(s)
 
-        for curr in range(1, len(dp)):
+        for i in range(len(s) - 1, -1, -1):
             for word in word_dict:
-                prev = curr - len(word)
-                if s[prev:curr] == word and dp[prev] is True:
-                    dp[curr] = True
-                    break
-        return dp[len(s)]
+                j = i + len(word)
+                if s[i:j] == word:
+                    if j >= len(dp) or dp[j] is True:
+                        dp[i] = True
+                        break
+        return dp[0]
 
 
 # @lc code=end
