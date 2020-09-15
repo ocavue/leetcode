@@ -41,6 +41,10 @@ function parse_header(lang: Lang, file_lines: string[]): Header {
 
     for (let field of ['submits', 'labels', 'comment'] as const) {
         header[field] = raw[field]
+        delete raw[field]
+    }
+    if (raw.length >= 1) {
+        throw Error("unknow field: " + JSON.stringify(raw))
     }
 
     return header
@@ -64,6 +68,8 @@ function walk_questions() {
     for (let file of files) {
         let matched = /^([0-9]+)\..+\.(py|go)$/.exec(file)
         if (matched) {
+            console.log('parsing', file)
+
             let id = Number(matched[1])
             let lang = matched[2] as Lang
             let text = fs.readFileSync(file, { encoding: 'utf-8' })
