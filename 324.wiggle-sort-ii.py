@@ -1,3 +1,14 @@
+"""
+submits:
+- date: 2020-09-08
+  cheating: true
+  minutes: 190
+comment: |
+  这道题太难了。它可以分为两个主要知识点：
+  1. Quick-Select
+  2. 虚拟数组
+  我只能做出来 Quick-Select 的部分，虚拟数组的部分对我来说太难了。
+"""
 #
 # @lc app=leetcode id=324 lang=python3
 #

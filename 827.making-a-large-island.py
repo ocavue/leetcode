@@ -3,7 +3,7 @@ submits:
 - date: 2020-09-03
   cheating: false
   minutes: 38
-lables:
+labels:
 - dfs
 - bfs
 """

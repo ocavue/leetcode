@@ -1,5 +1,5 @@
 """
-lables: [greedy]
+labels: [greedy]
 comment: 好难。看答案 https://leetcode-cn.com/problems/task-scheduler/solution/ren-wu-diao-du-qi-by-leetcode/
 submits:
 - date: 2020-08-29

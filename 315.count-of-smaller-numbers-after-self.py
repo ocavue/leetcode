@@ -3,7 +3,7 @@ submits:
 - date: 2020-09-13
   cheating: true
   minutes: 50
-lables:
+labels:
 - merge-sort
 comment: |
   这道题需要使用 Merge sort 去解。merge sort 的特点就是所有小于当前数的数字会移动到当前数字的左边，
