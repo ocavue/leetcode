@@ -1,0 +1,21 @@
+{
+  "name": "leetcode",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/ocavue/leetcode.git",
+  "author": "ocavue <ocavue@gmail.com>",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "test": "tsc && node .github/statistics.js"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^3.12.5",
+    "@types/node": "^14.10.1",
+    "husky": "^4.3.0",
+    "js-yaml": "^3.14.0",
+    "ts-node": "^9.0.0",
+    "tslib": "^2.0.1",
+    "typescript": "^4.0.2"
+  }
+}

@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "target": "ES5",
+        "module": "ES6",
+        "strict": true,
+        "importHelpers": true,
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "allowJs": true,
+        "allowSyntheticDefaultImports": true,
+        "noEmit": false,
+        "declaration": false, // Generates `.d.ts` file.
+        "forceConsistentCasingInFileNames": true,
+        "skipLibCheck": true,
+    },
+    "include": [
+        "./.github/statistics.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist",
+    ],
+}
