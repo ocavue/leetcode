@@ -5,6 +5,9 @@ submits:
   - date: 2020-08-14
     cheating: true
     minutes: 70
+  - date: 2020-09-16
+    cheating: false
+    minutes: 27
 """
 
 #
@@ -52,55 +55,23 @@ from typing import List
 import bisect
 
 
-def length_of_lis_v1(nums: List[int]) -> int:
-    # Time: O(n*n)
-    # Space: O(n)
-
-    # length_of_lis_endswith_k_list[k] == x 表示以 nums[k] 结尾的 longest increasing subsequence 的长度。
-    length_of_lis_endswith_k_list = []
-
-    for k in range(0, len(nums)):
-        if k == 0:
-            length_of_lis_endswith_k_list.append(1)
-        else:
-            length_of_lis_endswith_k = 1
-            for i in range(0, k):
-                if nums[i] < nums[k]:
-                    length_of_lis_endswith_k = max(length_of_lis_endswith_k, length_of_lis_endswith_k_list[i] + 1,)
-            length_of_lis_endswith_k_list.append(length_of_lis_endswith_k)
-        assert len(length_of_lis_endswith_k_list) == k + 1
-
-    return max(length_of_lis_endswith_k_list) if length_of_lis_endswith_k_list else 0
-
-
 def length_of_lis_v2(nums: List[int]) -> int:
-    # Time: O( log(n) )
-    # Space: O(n)
 
-    # dp[i] 表示长度为 i+1 的 Increasing Subsequence 中，末尾的数字最小是多少
-    dp: List[int] = []
-    for n in nums:
-        # assert sorted(dp) == dp
+    # dp[i] = num 表示所有长度为 i+1 的 increasing subsequence 中，末尾数字最小的那个 increasing subsequence 的末尾数字。
+    dp = [nums[0]]
 
-        if len(dp) == 0:
-            dp.append(n)
-        else:
-            if n > dp[-1]:
-                dp.append(n)
-            elif n == dp[-1]:
-                pass
-            else:
-                pos = bisect.bisect_left(dp, n)
-                assert dp[pos] >= n
-                dp[pos] = n
-        # assert sorted(dp) == dp
+    for num in nums:
+        i = bisect.bisect_left(dp, num)
+        dp[i : i + 1] = [num]
 
-    # assert sorted(dp) == dp
+    # print(dp)
     return len(dp)
 
 
 class Solution:
     def lengthOfLIS(self, nums: List[int]) -> int:
+        if not nums:
+            return 0
         return length_of_lis_v2(nums)
 
 
@@ -114,5 +85,5 @@ if __name__ == "__main__":
         [[2, 2, 2, 2, 2], 1],
         [[4, 10, 4, 3, 8, 9], 3],
     ]:
-        assert length_of_lis_v1(input) == output, "{} expected: {}; actual: {}".format(input, output, length_of_lis_v1(input))
+        # assert length_of_lis_v1(input) == output, "{} expected: {}; actual: {}".format(input, output, length_of_lis_v1(input))
         assert length_of_lis_v2(input) == output, "{} expected: {}; actual: {}".format(input, output, length_of_lis_v2(input))
