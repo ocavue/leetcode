@@ -3,6 +3,9 @@ submits:
   - date: 2020-08-01
     cheating: true
     minutes: 9
+  - date: 2020-09-16
+    minutes: 8
+    cheating: false
 labels: [trie]
 comment: 这道题考察了 Trie（前缀树/字典树）的数据结构
 """
@@ -59,41 +62,32 @@ class TrieNode:
 
 class Trie:
     def __init__(self):
-        """
-        Initialize your data structure here.
-        """
         self.root = TrieNode()
 
-    def insert(self, word: str) -> None:
-        """
-        Inserts a word into the trie.
-        """
-        curr = self.root
-        for c in word:
-            curr = curr.children[c]
-        curr.is_word = True
+    def insert(self, s: str):
+        node = self.root
 
-    def search(self, word: str) -> bool:
-        """
-        Returns if the word is in the trie.
-        """
-        curr = self.root
-        for c in word:
-            curr = curr.children.get(c)
-            if curr is None:
-                return False
-        return curr.is_word
+        for c in s:
+            node = node.children[c]
 
-    def startsWith(self, prefix: str) -> bool:
-        """
-        Returns if there is any word in the trie that starts with the given prefix.
-        """
-        curr = self.root
-        for c in prefix:
-            curr = curr.children.get(c)
-            if curr is None:
-                return False
-        return True
+        node.is_word = True
+
+    def _search(self, s: str):
+        node = self.root
+        for c in s:
+            if c in node.children:
+                node = node.children[c]
+            else:
+                return None
+        return node
+
+    def search(self, s: str) -> bool:
+        node = self._search(s)
+        return node and node.is_word
+
+    def startsWith(self, s: str) -> bool:
+        node = self._search(s)
+        return bool(node)
 
 
 # # 使用 set 的实现，虽然能完成题目但是和题目想考察的知识点不匹配
@@ -134,6 +128,8 @@ class Trie:
 # obj.insert(word)
 # param_2 = obj.search(word)
 # param_3 = obj.startsWith(prefix)
+
+
 # @lc code=end
 if __name__ == "__main__":
 
