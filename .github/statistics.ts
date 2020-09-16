@@ -97,10 +97,10 @@ function getSorkKey(question: Question): number {
 
     // 没做出来的排在前面
     // 提交比较早的排在前面
-    return (
-        lastSubmit.cheating ? 0 : Date.parse('2099-01-01T01:01:01') +
-        Date.parse(lastSubmit.date)
-    )
+    let key = lastSubmit.cheating ? 0 : Date.parse('2099-01-01T01:01:01')
+    key += Date.parse(lastSubmit.date)
+    console.log(question.id, key)
+    return key
 }
 
 
