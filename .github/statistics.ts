@@ -18,6 +18,7 @@ interface Header {
 interface Question {
     id: number,
     lang: Lang,
+    file: string,
     header: Header,
 }
 
@@ -78,6 +79,7 @@ function walk_questions() {
                     {
                         id,
                         lang,
+                        file,
                         header: parse_header(lang, lines),
                     }
                 )
@@ -99,7 +101,6 @@ function getSorkKey(question: Question): number {
     // 提交比较早的排在前面
     let key = lastSubmit.cheating ? 0 : Date.parse('2099-01-01T01:01:01')
     key += Date.parse(lastSubmit.date)
-    console.log(question.id, key)
     return key
 }
 
@@ -111,14 +112,25 @@ function sort_questions(questions: Question[]) {
     )
 }
 
-function main() {
+function print(obj: any) {
     console.log(
         JSON.stringify(
-            sort_questions(walk_questions()),
+            obj,
             null,
             "  ",
         )
     )
+}
+
+function main() {
+    const questions = sort_questions(walk_questions())
+    if (process.env.LEETCODE_NEXT) {
+        const question = questions[0]
+        console.log(question.file)
+    }
+    else {
+        print(questions)
+    }
 }
 
 main()

@@ -7,8 +7,10 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "test": "tsc && node .github/statistics.js",
-    "next": "yarn run test | head -n 20"
+    "build": "tsc",
+    "postinstall": "yarn run build",
+    "test": "node .github/statistics.js",
+    "next": "LEETCODE_NEXT=1 yarn run test"
   },
   "husky": {
     "hooks": {
