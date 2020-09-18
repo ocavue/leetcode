@@ -2,6 +2,9 @@
 submits:
   - date: 2020-07-21
     cheating: true
+  - date: 2020-09-18
+    cheating: true
+    minutes: 50
 labels:
   - dp
 comment: |
@@ -10,6 +13,11 @@ comment: |
   初始状态：当有 0 个字符串时，对于每个 m 和 n 的组合，map[(m,n)] = 0
   中间状态：当有 x 个字符串时，对于每个 m 和 n 的组合，map[(m,n)] = ?
   状态转移：当有 x+1 个字符串时候，对于每个 m 和 n 的组合，map[(m,n)] = max( map[(m,n)], map[(m - curr_m, n - curr_n)] )。其中 curr_m 和 curr_n 表示当前的字符串的字符数量
+
+  第二次做，新的感受：
+  状态：当有 m 个零，n 个壹，那么对于 strings 的前 i 个数字，最多可以组成多少个数字
+       dp(m, n, i) = ?
+  所以这其实是一个三维的 dp，只不过因为 i 这个变量我们每次迭代只需要知道 i-1 的状态。所以一个二维数组就可以了。
 """
 
 #
@@ -64,47 +72,57 @@ comment: |
 #
 #
 
+# @lc code=start
+
+
 from typing import List
 
 from pprint import pprint
+from collections import namedtuple
+from functools import lru_cache
 
-# @lc code=start
+Pair = namedtuple("Pair", ["ones", "zeros"])
+
+
 class Solution:
     def findMaxForm(self, strings: List[str], target_zeros: int, target_ones: int) -> int:
-        # map[zeros][ones] = the max number of strings that can be formed with zeros 0's and ones 1's
-        map = []
-        for i in range(0, target_zeros + 1):
-            row = [0] * (target_ones + 1)
-            map.append(row)
-
-        # assert len(map) == target_zeros + 1
-        # for row in map:
-        #     assert len(row) == target_ones + 1
-
-        for string in strings:
-            # print("[debug] string", string)
-            zeros, ones = 0, 0
-            for char in string:
-                if char == "0":
+        pairs: List[Pair] = []
+        for s in strings:
+            ones, zeros = 0, 0
+            for c in s:
+                if c == "0":
                     zeros += 1
                 else:
                     ones += 1
+            pairs.append(Pair(zeros=zeros, ones=ones))
 
-            for o in range(target_ones, -1, -1):
-                for z in range(target_zeros, -1, -1):
-                    # print(f"z: {z} o: {o}")
+        dp: List[List[int]] = []
+        for z in range(target_zeros + 1):
+            dp.append([0] * (target_ones + 1))
 
-                    prev_zeros = z - zeros
-                    prev_ones = o - ones
-                    if 0 <= prev_zeros <= target_zeros and 0 <= prev_ones <= target_ones:
-                        prev_num = map[prev_zeros][prev_ones]
-                        curr_num = map[z][o]
+        for i, last in enumerate(pairs):
+            for z in range(target_zeros, -1,-1):
+                for o in range(target_ones, -1,-1):
+                    # 不包含 last
+                    case1 = dp[z][o]
 
-                        map[z][o] = max(prev_num + 1, curr_num)
-            # pprint(map)
+                    # 包含 last
+                    if z >= last.zeros and o >= last.ones:
+                        case2 = dp[z - last.zeros][o - last.ones] + 1
+                    else:
+                        case2 = 0
+                    dp[z][o] = max(case1, case2)
 
-        # pprint(map)
-        return map[target_zeros][target_ones] or 0
+                    # if dp[z][o] > 4:
+                    #     import pdb;pdb.set_trace()
+            # max_val = 0
+            # for z in range(target_zeros + 1):
+            #     for o in range(target_ones + 1):
+            #         max_val = max(max_val, dp[z][o])
+            # if max_val > i+1:
+            #     import pdb;pdb.set_trace()
+
+        return dp[target_zeros][target_ones]
 
 
 # @lc code=end
