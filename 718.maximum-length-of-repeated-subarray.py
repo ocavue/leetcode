@@ -3,7 +3,7 @@ submits:
   - cheating: false
     date: 2020-07-25
     minutes: 18
-comment:
+comment: ""
 labels: [dp]
 """
 
