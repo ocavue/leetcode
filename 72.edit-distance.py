@@ -3,6 +3,9 @@ submits:
   - date: 2020-08-04
     minutes: 240
     cheating: true
+  - date: 2020-09-19
+    minutes: 30
+    cheating: false
 labels: [dp]
 comment: |
   我发现这个答案的思路非常有用：https://leetcode.com/problems/edit-distance/discuss/159295/Python-solutions-and-intuition
@@ -10,6 +13,8 @@ comment: |
   1. 动态规划 = 递归 + cache
   2. 递归如果没有尾递归优化的话会造成调用栈溢出，而动态规划没有这个问题
   3. 遇到不知道怎么做的题目，先尝试使用递归去实现，然后再增加动态规划所需要的 cache
+
+  第二次做题的时候，一开始状态函数一直找不出来，然后用一个矩阵把 horse => ros 需要的步骤全画出来了，很快就理清楚了逻辑。所以通过例子去寻找规律是非常有用的。
 """
 
 #
@@ -66,70 +71,53 @@ comment: |
 
 # @lc code=start
 
+from typing import List
 from functools import lru_cache
-
-
-# 基于递归的实现（思路更清晰）
-@lru_cache()
-def min_distance_recursion(word1: str, word2: str) -> int:
-    if not word1:
-        return len(word2)
-    if not word2:
-        return len(word1)
-
-    if word1[0] == word2[0]:
-        return min_distance_recursion(word1[1:], word2[1:])
-    else:
-        # Insert
-        case1 = 1 + min_distance_recursion(word1[1:], word2)
-        # Delete
-        case2 = 1 + min_distance_recursion(word1, word2[1:])
-        # Replace
-        case3 = 1 + min_distance_recursion(word1[1:], word2[1:])
-        return min(case1, case2, case3)
 
 
 # 基于动态规划的实现（性能更好）
 def min_distance_dp(word1: str, word2: str) -> int:
-    len1 = len(word1)
-    len2 = len(word2)
+    len1, len2 = len(word1), len(word2)
 
-    # dp[i][j] 表示 word1[i:] 和 word2[j:] 之间的最短距离
-    # 其中
-    #   0 <= i <= len1
-    #   0 <= j <= len2
-    dp = []
+    # dp[i][j] 表示 word1[:i] 和 word2[:j] 之间至少需要多少个转换步骤
+    dp: List[List[int]] = []
     for i in range(len1 + 1):
-        dp.append([None] * (len2 + 1))
+        dp.append([-1] * (len2 + 1))
 
-    j = len2
+    def cal_with_cache(i: int, j: int) -> int:
+        if i <= 0:
+            return max(j, 0)
+        if j <= 0:
+            return max(i, 0)
+
+        if dp[i][j] == -1:
+            dp[i][j] = cal(i, j)
+        return dp[i][j]
+
+    def cal(i: int, j: int) -> int:
+        char1 = word1[i - 1]
+        char2 = word2[j - 1]
+
+        if char1 == char2:
+            return cal_with_cache(i - 1, j - 1)
+        else:
+            # fmt:off
+            return min(
+                cal_with_cache(i - 1, j),
+                cal_with_cache(i, j - 1),
+                cal_with_cache(i - 1, j - 1),
+            ) + 1
+            # fmt:on
+
     for i in range(len1 + 1):
-        dp[i][j] = len1 - i
-        # assert len(word2[j:]) == 0 and len(word1[i:]) == dp[i][j]
-    i = len1
-    for j in range(len2 + 1):
-        dp[i][j] = len2 - j
-        # assert len(word1[i:]) == 0 and len(word2[j:]) == dp[i][j]
-
-    for i in range(len1 - 1, -1, -1):
-        for j in range(len2 - 1, -1, -1):
-            if word1[i] == word2[j]:
-                dp[i][j] = dp[i + 1][j + 1]
-            else:
-                # Insert
-                case1 = 1 + dp[i + 1][j]
-                # Delete
-                case2 = 1 + dp[i][j + 1]
-                # Replace
-                case3 = 1 + dp[i + 1][j + 1]
-                dp[i][j] = min(case1, case2, case3)
-
-    return dp[0][0]
+        for j in range(len2 + 1):
+            cal_with_cache(i, j)
+    return cal_with_cache(len1, len2)
 
 
 class Solution:
     def minDistance(self, word1: str, word2: str) -> int:
-        return min_distance_recursion(word1, word2)
+        return min_distance_dp(word1, word2)
 
 
 # @lc code=end
@@ -137,9 +125,6 @@ if __name__ == "__main__":
     import unittest
 
     t = unittest.TestCase("__init__")
-
-    t.assertEqual(min_distance_recursion("horse", "ros"), 3)
-    t.assertEqual(min_distance_recursion("intention", "execution"), 5)
 
     t.assertEqual(min_distance_dp("horse", "ros"), 3)
     t.assertEqual(min_distance_dp("intention", "execution"), 5)
