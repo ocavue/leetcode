@@ -1,5 +1,6 @@
 .github/statistics.js
 yarn.lock
+__pyc__
 
 # Logs
 logs
