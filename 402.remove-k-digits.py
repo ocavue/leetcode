@@ -3,6 +3,9 @@ submits:
 - date: 2020-10-03
   minutes: 25
   cheating: false
+- date: 2020-10-03
+  minutes: 10
+  cheating: true
 labels:
 - stack
 """
