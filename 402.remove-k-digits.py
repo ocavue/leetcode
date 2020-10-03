@@ -3,7 +3,8 @@ submits:
 - date: 2020-10-03
   minutes: 25
   cheating: false
-
+labels:
+- stack
 """
 #
 # @lc app=leetcode id=402 lang=python3
@@ -63,32 +64,43 @@ submits:
 # @lc code=start
 class Solution:
     def removeKdigits(self, num: str, k: int) -> str:
-        while k > 0:
-            while num.startswith("0"):
-                num = num[1:]
+        stack = []
+        for c in num:
+            while k > 0 and len(stack) > 0 and stack[-1] > c:
+                k -= 1
+                stack.pop()
+            stack.append(c)
+        if k > 0:
+            stack = stack[:-k]
+        return "".join(stack).lstrip("0") or "0"
 
-            if k >= len(num):
-                return "0"
+        # while k > 0:
+        #     while num.startswith("0"):
+        #         num = num[1:]
 
-            # 优先减少更多位数
-            if "0" in num:
-                first_zero_index = num.index("0")
-                if k >= first_zero_index:
-                    num = num[first_zero_index:]
-                    k = k - first_zero_index
-                    continue
+        #     if k >= len(num):
+        #         return "0"
 
-            best = num[1:]
-            for i in range(len(num)):
-                best = min(best, num[:i] + num[i + 1 :])
-            num = best
-            k = k - 1
-            continue
+        #     # # 优先减少更多位数
+        #     # if "0" in num:
+        #     #     first_zero_index = num.index("0")
+        #     #     if k >= first_zero_index:
+        #     #         num = num[first_zero_index:]
+        #     #         k = k - first_zero_index
+        #     #         continue
 
-        while num.startswith("0"):
-            num = num[1:]
+        #     best = num[1:]
+        #     for i in range(len(num)):
+        #         best = min(best, num[:i] + num[i + 1 :])
+        #     num = best
+        #     k = k - 1
+        #     continue
 
-        return num or "0"
+        # while num.startswith("0"):
+        #     num = num[1:]
+
+        # return num or "0"
+
 
 # @lc code=end
 
