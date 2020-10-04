@@ -1,3 +1,6 @@
+import unittest
+
+
 def logger(func):
     def new_func(*args, **kwargs):
         result = func(*args, **kwargs)
@@ -9,3 +12,8 @@ def logger(func):
         return result
 
     return new_func
+
+
+def test( ):
+    return unittest.TestCase("__init__")
+
