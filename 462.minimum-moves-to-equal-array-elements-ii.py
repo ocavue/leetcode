@@ -47,8 +47,8 @@ submits:
 class Solution:
     def minMoves2(self, nums) -> int:
         nums.sort()
-        median = nums[len(nums) / 2]
-        return sum(abs(num - median) for num in nums)
+        median = nums[len(nums) // 2]
+        return sum([abs(num - median) for num in nums])
 
 
 # @lc code=end
