@@ -20,7 +20,7 @@ comment: |
         .                            .     .     .    .
         .                            .     .     .    .
         .                            .     .     .    .
-    虽然 ugly number 的争夺，K sorted list 中的每个 sorted list 都在增长。我们要在这 K 个 sorted list 中找到最小的那个数字
+    随着 ugly number 的增多，K sorted list 中的每个 sorted list 都在增长。我们要在这 K 个 sorted list 中找到最小的那个数字
 """
 #
 # @lc app=leetcode id=313 lang=python3
