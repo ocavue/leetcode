@@ -1,5 +1,5 @@
 """
-submit:
+submits:
 - date: 2020-10-14
   cheating: false
   minutes: 24
