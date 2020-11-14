@@ -3,6 +3,11 @@ submits:
 - date: 2020-10-28
   cheating: false
   minutes: 4
+- date: 2020-11-14
+  cheating: true
+  minutes: 40
+labels:
+- bit-manipulation
 """
 #
 # @lc app=leetcode id=260 lang=python3
@@ -60,15 +65,27 @@ submits:
 #
 
 # @lc code=start
-from collections import Counter
 class Solution:
-    def singleNumber(self, nums: List[int]) -> List[int]:
-        c = Counter(nums)
-        result = []
-        for num, count in c.items():
-            if count == 1:
-                result.append(num)
-        return result
+    def singleNumber(self, nums):
+        xor = 0
+        for n in nums:
+            xor ^= n
+
+        # 此时 xor == num1 ^ num2
+        # 而且由于 ^ 运算的特性，xor 中的所有 1 要么属于 num1 要么属于 num2
+        # 现在我们只要找到 xor 中的任意一个 bit
+
+        bit = xor & -xor  # 方法一
+        # bit = xor & ~(xor - 1)  # 方法二
+        # 这两种方法我都不是很理解
+
+        num1, num2 = 0, 0
+        for n in nums:
+            if bit & n == 0:
+                num1 ^= n
+            else:
+                num2 ^= n
+        return [num1, num2]
+
 
 # @lc code=end
-
