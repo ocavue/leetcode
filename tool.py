@@ -14,6 +14,9 @@ def logger(func):
     return new_func
 
 
-def test( ):
+def test():
     return unittest.TestCase("__init__")
 
+
+def t(received, expected):
+    assert (expected) == (received), "expected: {}, received: {}".format(expected, received)
