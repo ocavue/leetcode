@@ -3,6 +3,9 @@ submits:
 - date: 2020-11-21
   minutes: 1
   cheating: false
+- date: 2020-12-01
+  minutes: 1
+  cheating: false
 labels:
 - bit-manipulation
 """
@@ -49,13 +52,9 @@ labels:
 
 # @lc code=start
 class Solution:
-    def hammingDistance(self, x, y) :
+    def hammingDistance(self, x, y):
         xor = x ^ y
-        onns = 0
-        for i in range(31, -1, -1):
-            if (xor >> i) & 1:
-                onns += 1
-        return onns
+        return sum((xor >> n) & 1 for n in range(32))
 
 
 # @lc code=end
