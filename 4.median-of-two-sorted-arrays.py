@@ -157,14 +157,25 @@ def find(nums1: List[int], nums2: List[int], lo1: int, hi1: int, lo2: int, hi2: 
     return find(nums1=nums1, nums2=nums2, lo1=lo1, lo2=lo2, hi1=hi1, hi2=hi2, expected_head=expected_head, expected_tail=expected_tail,)
 
 
+def findMedianSortedArrays_v1(nums1: List[int], nums2: List[int]) -> float:
+    if (len(nums1) + len(nums2)) % 2 == 0:
+        expected_head = expected_tail = (len(nums1) + len(nums2)) // 2 - 1
+    else:
+        expected_head = expected_tail = (len(nums1) + len(nums2)) // 2
+
+    return find(nums1, nums2, lo1=0, hi1=len(nums1), lo2=0, hi2=len(nums2), expected_head=expected_head, expected_tail=expected_tail)
+
+
+###################################################################################################
+
+
+def findMedianSortedArrays_v2(nums1: List[int], nums2: List[int]) -> float:
+    pass
+
+
 class Solution:
     def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
-        if (len(nums1) + len(nums2)) % 2 == 0:
-            expected_head = expected_tail = (len(nums1) + len(nums2)) // 2 - 1
-        else:
-            expected_head = expected_tail = (len(nums1) + len(nums2)) // 2
-
-        return find(nums1, nums2, lo1=0, hi1=len(nums1), lo2=0, hi2=len(nums2), expected_head=expected_head, expected_tail=expected_tail)
+        return findMedianSortedArrays_v2(nums1, nums2)
 
 
 # @lc code=end
