@@ -1,5 +1,5 @@
 """
-submits
+submits:
 - date: 2020-01-06
   minutes: 3
   cheating: false
