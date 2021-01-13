@@ -1,3 +1,24 @@
+"""
+submits:
+- date: 2021-01-13
+  minutes: 46
+  cheating: true
+labels:
+- dp
+- dfs
+comment: |
+  我们设计一种函数 dfs(i,j,k) => res，表示在 nums[i] 之前有 k 个和 nums[i] 相同的颜色时，
+  删除 nums[i:j] 可以最大可以获得多少钱。
+
+  对于 dfs(i,j,k)，我们有两种选择：
+
+  1. 我们删除 nums[i] 以及之前的 k 个数字，所以一共删除了 k+1 个数字
+  2. 我们不删除 nums[i] 以及之前的 k 个数字。我们在 i 到 j 之间寻找一个新的 index（这里叫做 x），
+  使得 nums[x] == nums[i]。然后我们首先删除 nums[i+1:x]，获得金额 dfs(i+1,x,0) ，然后我们再
+  将之前留下的 k+1 个数字利用起来。删除 nums[x:j]，也就是 dfs(x,j,k+1)。
+
+  这里还学到了原来 python 的 lru_cache 的长度限制默认是 128。最好的方式是 lru_cache(None)。
+"""
 #
 # @lc app=leetcode id=546 lang=python3
 #
@@ -53,7 +74,7 @@ from functools import lru_cache
 
 class Solution:
     def removeBoxes(self, boxes: List[int]) -> int:
-        @lru_cache()
+        @lru_cache(None)
         def dfs(i: int, j: int, k: int) -> int:
             if j <= i:
                 return 0
