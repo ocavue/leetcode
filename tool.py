@@ -20,3 +20,19 @@ def test():
 
 def t(received, expected):
     assert (expected) == (received), "expected: {}, received: {}".format(expected, received)
+
+
+def tt(func):
+    def assert_equal(input_args, expected_result):
+        if isinstance(input_args, list):
+            received_result = func(*input_args)
+        elif isinstance(input_args, tuple):
+            received_result = func(*input_args)
+        elif isinstance(input_args, dict):
+            received_result = func(**input_args)
+        else:
+            raise Exception(f"unknow input_args type {type(input_args)}")
+
+        t(received_result, expected_result)
+
+    return assert_equal
